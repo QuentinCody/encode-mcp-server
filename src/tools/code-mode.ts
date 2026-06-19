@@ -23,6 +23,8 @@ export function registerCodeMode(
 
     const executeTool = createExecuteTool({
         prefix: "encode",
+        // Verifiable provenance: encode_execute results carry a _meta.citation.
+        source: { id: "encode", name: "ENCODE", url: "https://www.encodeproject.org" },
         catalog: encodeCatalog,
         apiFetch,
         doNamespace: env.ENCODE_DATA_DO,
