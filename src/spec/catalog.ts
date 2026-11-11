@@ -1,19 +1,24 @@
 import type { ApiCatalog } from "@bio-mcp/shared/codemode/catalog";
+import { regulatoryEndpoints, regulatoryWorkflows } from "./regulatory";
+import { bulkEndpoints, bulkWorkflows } from "./bulk";
 
 export const encodeCatalog: ApiCatalog = {
     name: "ENCODE",
     baseUrl: "https://www.encodeproject.org",
     auth: "none",
-    endpointCount: 12,
+    endpointCount: 12 + regulatoryEndpoints.length + bulkEndpoints.length,
+    workflows: [...regulatoryWorkflows, ...bulkWorkflows],
     notes:
         "- ENCODE (Encyclopedia of DNA Elements) hosts functional genomics data: experiments, biosamples, files, annotations.\n" +
         "- ALWAYS send `Accept: application/json` and `format=json` in query params — HTML is the default content-type.\n" +
         "- Object-lookup endpoints (`/<type>/<accession>/`) return a single record with ~100 nested fields. Use `frame=object` to skip embedded expansions.\n" +
-        "- Portal-style search (`/search/`) returns a wrapped JSON object with `@graph` as the records array — use `record_path: 'data'` or extract `@graph` in Code Mode.\n" +
-        "- Keep `limit=10` and `max_items=10` on search endpoints; full ENCODE result sets are huge.\n" +
-        "- Accession prefixes: ENCSR* experiment, ENCBS* biosample, ENCFF* file, ENCLB* library, ENCAN* annotation, ENCDO* donor.\n" +
+        "- Portal-style search (`/search/`) returns a wrapped JSON object with `@graph` as the records array — retain the full envelope including @graph, total, facets, filters and audit information.\n" +
+        "- Use bounded search limits; limit is not proof of completeness and max_items is not a native ENCODE search parameter.\n" +
+        "- Accession prefixes: ENCSR* experiment, ENCBS* biosample, ENCFF* file, ENCLB* library, ENCSR* annotation file set; ENCAN* analysis, ENCDO* donor.\n" +
         "- Docs: https://www.encodeproject.org/help/rest-api/ — full types: https://www.encodeproject.org/profiles/",
     endpoints: [
+        ...bulkEndpoints,
+        ...regulatoryEndpoints,
         // Object-lookup category
         {
             method: "GET",
@@ -71,7 +76,7 @@ export const encodeCatalog: ApiCatalog = {
         {
             method: "GET",
             path: "/annotations/{accession}/",
-            summary: "Get a functional annotation (ENCAN...) — e.g. cCREs, candidate regulatory elements",
+            summary: "Get a functional annotation file set (ENCSR...) — e.g. cCREs, candidate regulatory elements",
             category: "object_lookup",
             pathParams: [
                 { name: "accession", type: "string", required: true, description: "Annotation accession" },
@@ -120,11 +125,15 @@ export const encodeCatalog: ApiCatalog = {
                 { name: "biosample_ontology.term_name", type: "string", required: false, description: "Filter by biosample term (e.g. 'K562', 'HepG2')" },
                 { name: "target.label", type: "string", required: false, description: "Filter by target (e.g. 'CTCF')" },
                 { name: "status", type: "string", required: false, description: "Filter by status (released | in progress | archived)" },
+                { name: "encyclopedia_version", type: "string", required: false, description: "Exact Encyclopedia version, e.g. ENCODE v4" },
+                { name: "assembly", type: "string", required: false, description: "Exact assembly label, e.g. GRCh38 or mm10" },
+                { name: "output_type", type: "string", required: false, description: "File output type, e.g. candidate Cis-Regulatory Elements or element gene links; arrays encode repeated filters" },
+                { name: "frame", type: "string", required: false, description: "Use object to retain complete properties with linked identifiers" },
                 { name: "limit", type: "number", required: false, description: "Max results (use small values; default varies)", default: 10 },
                 { name: "format", type: "string", required: false, description: "Force JSON", default: "json" },
             ],
             featured: true,
-            usageHint: "Results live under `@graph`. Set `record_path: 'data'` or read `response['@graph']` directly.",
+            usageHint: "Results live under @graph; retain total and provenance. Do not flatten a staged/error handle into an empty array.",
         },
         {
             method: "GET",

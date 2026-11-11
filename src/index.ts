@@ -9,6 +9,7 @@ import { EncodeDataDO } from "./do";
 export { EncodeDataDO };
 
 interface EncodeEnv {
+    SCREEN_API_KEY?: string;
     ENCODE_DATA_DO: DurableObjectNamespace;
     CODE_MODE_LOADER: WorkerLoader;
 }

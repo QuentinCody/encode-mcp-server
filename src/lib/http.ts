@@ -28,8 +28,8 @@ export async function encodeFetch(
     // Always request JSON via query param — ENCODE uses content negotiation
     // via both Accept header AND `?format=json`. Belt-and-suspenders.
     const effectiveParams: Record<string, unknown> = {
-        format: "json",
         ...(params ?? {}),
+        format: "json",
     };
 
     return restFetch(baseUrl, path, effectiveParams, {

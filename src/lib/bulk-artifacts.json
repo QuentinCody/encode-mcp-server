@@ -1,0 +1,11 @@
+[
+  { "key": "HumanCoreCollectionClassMatrix", "file": "Core-Collection-Class-Matrix.txt.gz", "kind": "class_matrix" },
+  { "key": "HumanGeneLinks3DChromatin", "file": "V4-hg38.Gene-Links.3D-Chromatin.txt.gz", "kind": "observed_links" },
+  { "key": "HumanGeneLinksCRISPR", "file": "V4-hg38.Gene-Links.CRISPR.txt.gz", "kind": "observed_links" },
+  { "key": "HumanGeneLinkseQTLs", "file": "V4-hg38.Gene-Links.eQTLs.txt.gz", "kind": "observed_links" },
+  { "key": "HumanGeneLinksABC", "file": "V4-hg38.Gene-Links.Computational-Methods.ABC.txt.gz", "kind": "predicted_links" },
+  { "key": "HumanGeneLinksEPIraction", "file": "V4-hg38.Gene-Links.Computational-Methods.EPIraction.txt.gz", "kind": "predicted_links" },
+  { "key": "HumanGeneLinksGraphRegLR", "file": "V4-hg38.Gene-Links.Computational-Methods.GraphRegLR.txt.gz", "kind": "predicted_links" },
+  { "key": "HumanGeneLinksrE2G", "file": "V4-hg38.Gene-Links.Computational-Methods.rE2G.txt.gz", "kind": "predicted_links" },
+  { "key": "HumanGeneLinks2", "file": "V4-hg38.Gene-Links.Computational-Methods.txt.gz", "kind": "predicted_links" }
+]
